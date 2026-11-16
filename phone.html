@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Togg CarPlay – Telefon</title>
+<style>
+body{margin:0;padding:24px;font-family:-apple-system,system-ui,sans-serif;background:#000;color:#fff}
+h1{font-size:26px;margin:0 0 6px}
+p,.s{color:#9aa;font-size:15px}
+button{width:100%;font-size:18px;padding:16px;border:0;border-radius:14px;background:#0a84ff;color:#fff;margin:8px 0}
+button.g{background:#2c2c2e}
+input{width:100%;box-sizing:border-box;font-size:17px;padding:14px;border-radius:12px;border:0;background:#1c1c1e;color:#fff;margin:6px 0}
+.card{background:#111;border-radius:18px;padding:16px;margin:14px 0}
+#res div{padding:12px 4px;border-bottom:1px solid #333}
+.ok{color:#30d158}.bad{color:#ff453a}
+</style>
+</head>
+<body>
+<h1>🚗 Togg CarPlay</h1>
+<p id="st">Hazır. Araca bağlanmak için dokun.</p>
+<button id="conn">Bağlan</button>
+
+<div class="card">
+  <b>Konum</b>
+  <div class="s" id="gps">Kapalı</div>
+</div>
+<div class="card">
+  <b>Hedef gönder</b>
+  <input id="q" placeholder="Adres veya yer ara" enterkeyhint="search">
+  <button id="s" class="g">Ara</button>
+  <div id="res"></div>
+</div>
+<div class="card">
+  <b>YouTube bağlantısı gönder</b>
+  <input id="u" type="url" placeholder="https://youtu.be/…">
+  <button id="su" class="g">Araca gönder</button>
+</div>
+<p class="s">Not: Konumun akması için bu sayfa iPhone'da açık ve ekran uyanık kalmalı (sayfa ekranı açık tutmaya çalışır).</p>
+<script>
+const $ = (s) => document.querySelector(s);
+const sid = new URLSearchParams(location.search).get('s');
+let ws, watch, wake, loc;
+function send(m) { ws && ws.readyState === 1 && ws.send(JSON.stringify(m)); }
+async function keepAwake() { try { wake = await navigator.wakeLock.request('screen'); } catch {} }
+document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && wake && keepAwake());
+function connect() {
+  ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws?role=phone&s=${sid}`);
+  ws.onmessage = (e) => { const m = JSON.parse(e.data); if (m.type === 'status') { $('#st').innerHTML = m.car ? '<span class="ok">Araç ekranı bağlı ✓</span>' : '<span class="bad">Araç ekranı çevrimdışı</span>'; } };
+  ws.onclose = (e) => { if (e.code === 4000) $('#st').textContent = 'Geçersiz/eski karekod. Araçta yeni karekod oluştur.'; else setTimeout(connect, 2000); };
+}
+$('#conn').onclick = () => {
+  if (!sid) return ($('#st').textContent = 'Karekod ile açın.');
+  connect(); keepAwake();
+  if (!navigator.geolocation) { $('#gps').textContent = 'Konum desteklenmiyor'; return; }
+  watch = navigator.geolocation.watchPosition((p) => {
+    loc = p.coords;
+    $('#gps').textContent = `${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
+    send({ type: 'loc', lat: p.coords.latitude, lon: p.coords.longitude, speed: p.coords.speed, heading: p.coords.heading, acc: p.coords.accuracy });
+  }, (e) => ($('#gps').textContent = 'Konum izni gerekli: ' + e.message), { enableHighAccuracy: true, maximumAge: 1000 });
+  $('#conn').textContent = 'Bağlandı';
+};
+$('#s').onclick = async () => {
+  const q = $('#q').value.trim(); if (!q) return;
+  const vb = loc ? `&viewbox=${loc.longitude - 1},${loc.latitude + 1},${loc.longitude + 1},${loc.latitude - 1}` : '';
+  const r = await (await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=5&accept-language=tr&countrycodes=tr&q=${encodeURIComponent(q)}${vb}`)).json();
+  $('#res').innerHTML = '';
+  r.forEach((x) => { const d = document.createElement('div'); d.textContent = '📍 ' + x.display_name; d.onclick = () => { send({ type: 'dest', lat: +x.lat, lon: +x.lon, name: x.display_name }); d.style.color = '#30d158'; }; $('#res').appendChild(d); });
+};
+$('#su').onclick = () => { const u = $('#u').value.trim(); if (u) { send({ type: 'url', url: u }); $('#u').value = ''; } };
+</script>
+</body>
+</html>
