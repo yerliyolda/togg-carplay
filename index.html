@@ -9,45 +9,45 @@
 </head>
 <body>
 <nav id="dock">
-  <button data-app="home" class="active" title="Ana ekran">âŒ‚</button>
-  <button data-app="map" title="Harita">ğŸ§­</button>
-  <button data-app="speed" title="HÄ±z">â±</button>
-  <button data-app="weather" title="Hava">â›…</button>
-  <button data-app="media" title="Medya">â–¶</button>
-  <button data-app="pair" title="Telefon" id="pairBtn">ğŸ“±<i id="dot"></i></button>
+  <button data-app="home" class="active" title="Ana ekran">⌂</button>
+  <button data-app="map" title="Harita">🧭</button>
+  <button data-app="speed" title="Hız">⏱</button>
+  <button data-app="weather" title="Hava">⛅</button>
+  <button data-app="media" title="Medya">▶</button>
+  <button data-app="pair" title="Telefon" id="pairBtn">📱<i id="dot"></i></button>
 </nav>
 <main>
   <section id="home" class="app active">
     <div class="clock"><div id="time">--:--</div><div id="date"></div></div>
     <div class="grid">
-      <button data-app="map"><span>ğŸ§­</span>Harita</button>
-      <button data-app="speed"><span>â±</span>HÄ±z</button>
-      <button data-app="weather"><span>â›…</span>Hava <small id="wTile"></small></button>
-      <button data-app="media"><span>â–¶</span>Medya</button>
-      <button data-app="pair"><span>ğŸ“±</span>Telefon <small id="pTile">BaÄŸlÄ± deÄŸil</small></button>
-      <button id="fsBtn"><span>â›¶</span>Tam ekran</button>
+      <button data-app="map"><span>🧭</span>Harita</button>
+      <button data-app="speed"><span>⏱</span>Hız</button>
+      <button data-app="weather"><span>⛅</span>Hava <small id="wTile"></small></button>
+      <button data-app="media"><span>▶</span>Medya</button>
+      <button data-app="pair"><span>📱</span>Telefon <small id="pTile">Bağlı değil</small></button>
+      <button id="fsBtn"><span>⛶</span>Tam ekran</button>
     </div>
   </section>
 
   <section id="map" class="app">
     <div id="mapEl"></div>
-    <div id="search"><input id="q" placeholder="Hedef araâ€¦" enterkeyhint="search"><button id="go">Ara</button></div>
+    <div id="search"><input id="q" placeholder="Hedef ara…" enterkeyhint="search"><button id="go">Ara</button></div>
     <div id="results"></div>
     <div id="nav" hidden><div id="step"></div><div id="eta"></div><button id="stop">Bitir</button></div>
-    <button id="recenter">â—</button>
+    <button id="recenter">◎</button>
   </section>
 
   <section id="speed" class="app">
     <div class="big"><span id="kmh">0</span><small>km/sa</small></div>
-    <div class="sub"><span id="head">â€”</span><span id="acc"></span></div>
+    <div class="sub"><span id="head">—</span><span id="acc"></span></div>
   </section>
 
   <section id="weather" class="app">
-    <div id="wBody">Konum bekleniyorâ€¦</div>
+    <div id="wBody">Konum bekleniyor…</div>
   </section>
 
   <section id="media" class="app">
-    <div id="mediaEmpty">Telefonundan bir YouTube baÄŸlantÄ±sÄ± gÃ¶nder.</div>
+    <div id="mediaEmpty">Telefonundan bir YouTube bağlantısı gönder.</div>
     <iframe id="player" allow="autoplay; encrypted-media; fullscreen" allowfullscreen hidden></iframe>
   </section>
 
@@ -55,8 +55,8 @@
     <div id="qrBox">
       <img id="qr" alt="QR">
       <div>
-        <h2 id="pStatus">Telefonunu eÅŸleÅŸtir</h2>
-        <p>iPhone kameranla karekodu okut, aÃ§Ä±lan sayfada <b>BaÄŸlan</b>'a dokun.</p>
+        <h2 id="pStatus">Telefonunu eşleştir</h2>
+        <p>iPhone kameranla karekodu okut, açılan sayfada <b>Bağlan</b>'a dokun.</p>
         <button id="newSess">Yeni karekod</button>
       </div>
     </div>
@@ -66,4 +66,3 @@
 <script src="car.js"></script>
 </body>
 </html>
-
