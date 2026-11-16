@@ -1,0 +1,9 @@
+{
+  "name": "togg-carplay",
+  "version": "1.0.0",
+  "description": "Togg T10X tarayıcısı için CarPlay benzeri arayüz (QR ile iPhone eşleştirme)",
+  "main": "server.js",
+  "engines": { "node": ">=18" },
+  "scripts": { "start": "node server.js" },
+  "dependencies": { "qrcode": "^1.5.4", "ws": "^8.18.0" }
+}
